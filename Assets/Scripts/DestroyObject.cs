@@ -8,7 +8,7 @@ public class DestroyObject : MonoBehaviour
     {
         if (transform.position.z < -20)
         {
-            Destroy(gameObject);
+            GameManager.Instance.DestroyGas(gameObject);
         }
     }
 }

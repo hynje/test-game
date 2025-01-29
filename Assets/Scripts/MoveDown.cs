@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveDown : MonoBehaviour
-{
-    private GameManager gameManager;
-
-    void Start()
-    {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
+{ 
+    [SerializeField] private float _speed = 4f;
+    
     void Update()
     {
-        if (gameManager.isGameActive)
+        if (GameManager.Instance.isGameActive)
         {
-            transform.Translate(Vector3.forward * Time.deltaTime);
+            transform.Translate(-Vector3.forward * Time.deltaTime * _speed);
         }
     }
 }

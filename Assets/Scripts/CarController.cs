@@ -5,38 +5,19 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    private GameManager gameManager;
-    
-    public float speed = 3f;
-    void Start()
-    {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
-    
-    void Update()
-    {
-        MoveCar();
-    }
+    [SerializeField] private float moveSpeed = 1f;
+    public int maxGas = 100;
 
-    void MoveCar()
+    public void Move(float direction)
     {
-        if (Input.GetMouseButton(0) && gameManager.isGameActive)
-        {
-            Vector3 touchPos = Input.mousePosition;
-            if (touchPos.x > Screen.width / 2)
-            {
-                transform.Translate(Vector3.right * Time.deltaTime * speed);
-            }
-            else
-            {
-                transform.Translate(Vector3.left * Time.deltaTime * speed);
-            }
-        }
+        transform.Translate(Vector3.right * (direction * moveSpeed * Time.deltaTime));
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -2f, 2f), 0, transform.position.z);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(other.gameObject);
-        gameManager.GetGas();
+        if (!other.CompareTag("Gas")) return;
+        GameManager.Instance.DestroyGas(other.gameObject);
+        GameManager.Instance.GetGas();
     }
 }
