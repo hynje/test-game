@@ -8,7 +8,7 @@ public class MoveDown : MonoBehaviour
     
     void Update()
     {
-        if (GameManager.Instance.isGameActive)
+        if (GameManager.Instance.GameState == GameManager.State.Play)
         {
             transform.Translate(-Vector3.forward * Time.deltaTime * _speed);
         }

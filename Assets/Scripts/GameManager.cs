@@ -21,6 +21,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject carPrefab;
     
+    // State
+    public enum State
+    {
+        Start,
+        Play,
+        End
+    };
+
+    public State GameState { get; private set; } = State.Start;
+
     private CarController _carController;
     
     // Road ObjectPool
@@ -39,7 +49,7 @@ public class GameManager : MonoBehaviour
     
     private int leftGas;
     private float _gasSpawnRate = 1.5f;
-    public bool isGameActive = false;
+    //public bool isGameActive = false;
     private int[] spawnXPoints = { -1, 0, 1 };
     
     // Singleton
@@ -83,7 +93,6 @@ public class GameManager : MonoBehaviour
             road.SetActive(false);
             _roadPool.Enqueue(road);
         }
-        
     }
 
     public void SpawnRoad(Vector3 position)
@@ -111,7 +120,7 @@ public class GameManager : MonoBehaviour
     
     IEnumerator UpdateGas()
     {
-        while (leftGas > 0 && isGameActive)
+        while (leftGas > 0 && GameState == State.Play)
         {
             yield return new WaitForSeconds(1);
             leftGas -= 10;
@@ -141,7 +150,7 @@ public class GameManager : MonoBehaviour
     IEnumerator SpawnGas()
     {
         int spawnCount = 0;
-        while (isGameActive)
+        while (GameState == State.Play)
         {
             yield return new WaitForSeconds(_gasSpawnRate);
             var spawnXIndex = Random.Range(0, spawnXPoints.Length);
@@ -170,7 +179,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        isGameActive = true;
+        GameState = State.Play;
         
         titleScreen.SetActive(false);
         gameScreen.SetActive(true);
@@ -190,13 +199,14 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
-        isGameActive = false;
+        GameState = State.End;
         gameScreen.SetActive(false);
         gameOverScreen.SetActive(true);
     }
 
     public void LoadTitleScreen()
     {
+        GameState = State.Start;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
